@@ -16,7 +16,7 @@ var password = "12982397StrongPassw0rd"
 
 func consumer() {
 	c := omique.NewClient(&redis.Options{Addr: redisAddr, Password: password})
-	consumer := c.NewConsumer("consumer_1", 1)
+	consumer := c.NewConsumer("consumer_1", 3)
 	consumer.AddHandler(func(message []byte) {
 		fmt.Println(string(message))
 	})

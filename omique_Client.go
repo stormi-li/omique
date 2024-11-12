@@ -22,5 +22,6 @@ func (c *Client) NewProducer(channel string) *Producer {
 		configSearcher: c.configManager.NewSearcher(),
 		channel:        channel,
 	}
+	go producer.refresh()
 	return &producer
 }

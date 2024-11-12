@@ -22,6 +22,7 @@ func producer() {
 	now := time.Now()
 	for i := 0; i < 100000; i++ {
 		producer.Publish([]byte("message" + strconv.Itoa(i)))
+		time.Sleep(10*time.Millisecond)
 	}
 	fmt.Println(time.Since(now))
 }

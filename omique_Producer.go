@@ -14,6 +14,7 @@ type Producer struct {
 	channel        string
 	address        string
 	conn           net.Conn
+	oldConn        net.Conn
 }
 
 func (producer *Producer) connect() error {
@@ -24,10 +25,18 @@ func (producer *Producer) connect() error {
 	}
 	conn, err := net.Dial("tcp", producer.address)
 	if err == nil {
+		producer.oldConn = producer.conn
 		producer.conn = conn
 		return nil
 	}
 	return err
+}
+
+func (producer *Producer) refresh() {
+	for {
+		producer.connect()
+		time.Sleep(refresh_conn_interval)
+	}
 }
 
 func (producer *Producer) Publish(message []byte) error {
@@ -42,6 +51,10 @@ func (producer *Producer) Publish(message []byte) error {
 	binary.BigEndian.PutUint32(lengthBuf, messageLength)
 
 	for {
+		if producer.oldConn != nil {
+			producer.oldConn.Close()
+			producer.oldConn = nil
+		}
 		if producer.conn != nil {
 			if _, err = producer.conn.Write(append(lengthBuf, byteMessage...)); err == nil {
 				break
