@@ -32,6 +32,9 @@ func (consumer *Consumer) Listen(address string) {
 }
 
 func (consumer *Consumer) start() {
+	if consumer.handler == nil {
+		panic("未添加消息处理器")
+	}
 	go func() {
 		listener, err := net.Listen("tcp", ":"+strings.Split(consumer.address, ":")[1])
 		if err != nil {
