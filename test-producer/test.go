@@ -1,11 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/go-redis/redis/v8"
-	omique "github.com/stormi-li/omique/omi-mq"
+	omique "github.com/stormi-li/omique"
 )
 
 func main() {
@@ -18,8 +19,9 @@ var password = "12982397StrongPassw0rd"
 func producer() {
 	c := omique.NewClient(&redis.Options{Addr: redisAddr, Password: password})
 	producer := c.NewProducer("consumer_1")
-	for i := 0; i < 10000; i++ {
+	now := time.Now()
+	for i := 0; i < 100000; i++ {
 		producer.Publish([]byte("message" + strconv.Itoa(i)))
-		time.Sleep(50 * time.Millisecond)
 	}
+	fmt.Println(time.Since(now))
 }

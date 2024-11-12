@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
-	omique "github.com/stormi-li/omique/omi-mq"
+	omique "github.com/stormi-li/omique"
 )
 
 func main() {
@@ -20,5 +20,5 @@ func consumer() {
 	consumer.AddHandler(func(message []byte) {
 		fmt.Println(string(message))
 	})
-	consumer.Listen("118.25.196.166:5555")
+	consumer.Listen("118.25.196.166:5556")
 }
